@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#183c35">
+	<title>Calculadora</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+		:root {
+			color-scheme: light;
+			font-family: 'Manrope', sans-serif;
+			background: #dce8df;
+			color: #183c35;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			min-height: 100vh;
+			margin: 0;
+			display: grid;
+			place-items: center;
+			padding: 24px;
+			background:
+				radial-gradient(ellipse at 18% 20%, #f5f1df 0, transparent 34%),
+				radial-gradient(ellipse at 88% 82%, #b8d5c5 0, transparent 36%),
+				#dce8df;
+		}
+
+		.calculator {
+			width: min(100%, 356px);
+			padding: 22px;
+			border: 1px solid rgba(255, 255, 255, .6);
+			border-radius: 12px;
+			background: #f7f5ea;
+			box-shadow: 0 24px 60px rgba(24, 60, 53, .16), 0 3px 8px rgba(24, 60, 53, .08);
+			animation: arrive .45s ease-out both;
+		}
+
+		.topline {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 18px;
+			color: #668078;
+			font-size: 11px;
+			font-weight: 800;
+			letter-spacing: .12em;
+			text-transform: uppercase;
+		}
+
+		.status {
+			display: inline-flex;
+			align-items: center;
+			gap: 7px;
+		}
+
+		.status::before {
+			width: 7px;
+			height: 7px;
+			border-radius: 50%;
+			background: #dd795f;
+			content: '';
+		}
+
+		.screen {
+			min-height: 112px;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
+			justify-content: flex-end;
+			overflow: hidden;
+			padding: 16px 4px 20px;
+			border-bottom: 1px solid #d9dfd5;
+			font-family: 'DM Mono', monospace;
+			text-align: right;
+		}
+
+		.previous {
+			min-height: 20px;
+			max-width: 100%;
+			overflow: hidden;
+			color: #81938a;
+			font-size: 13px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.current {
+			width: 100%;
+			overflow: hidden;
+			color: #183c35;
+			font-size: clamp(32px, 10vw, 46px);
+			line-height: 1.2;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.keys {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 9px;
+			padding-top: 16px;
+		}
+
+		button {
+			min-width: 0;
+			aspect-ratio: 1.18;
+			border: 0;
+			border-radius: 7px;
+			background: #e8ebe1;
+			color: #244b42;
+			cursor: pointer;
+			font: 700 18px 'Manrope', sans-serif;
+			transition: background-color .15s ease, transform .15s ease;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		button:hover { background: #dce4d8; }
+		button:active { transform: scale(.95); }
+		button:focus-visible { outline: 3px solid #dd795f; outline-offset: 2px; }
+
+		button.utility {
+			background: #d8e4d8;
+			color: #426357;
+			font-size: 15px;
+		}
+
+		button.operator {
+			background: #f0dfc9;
+			color: #9c563f;
+			font-size: 21px;
+		}
+
+		button.equals {
+			background: #d8765d;
+			color: #fffaf0;
+			font-size: 22px;
+		}
+
+		button.equals:hover { background: #c9654e; }
+
+		@keyframes arrive {
+			from { opacity: 0; transform: translateY(10px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			*, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+		}
+
+		.calculator { width: min(100%, 380px); }
+		.topline { margin-bottom: 20px; font-size: 15px; letter-spacing: 0; text-transform: none; }
+		.status { display: none; }
+		.calculator-form { display: grid; gap: 14px; }
+		.field { display: grid; gap: 6px; color: #426357; font-size: 14px; font-weight: 700; }
+		input, select {
+			width: 100%;
+			min-height: 42px;
+			padding: 9px 11px;
+			border: 1px solid #cbd6cc;
+			border-radius: 6px;
+			background: #fffef9;
+			color: #183c35;
+			font: 500 16px 'Manrope', sans-serif;
+		}
+		input:focus, select:focus { outline: 3px solid #b8d5c5; border-color: #668078; }
+		button.calculate {
+			min-height: 44px;
+			aspect-ratio: auto;
+			margin-top: 2px;
+			border-radius: 6px;
+			background: #d8765d;
+			color: #fffaf0;
+			font-size: 16px;
+		}
+		button.calculate:hover { background: #c9654e; }
+		.result { min-height: 24px; margin: 2px 0 0; color: #183c35; font-size: 16px; font-weight: 700; }
+
+		html, body { all: unset; display: block; }
+		body { margin: 8px; }
+		textarea {
+			display: block;
+			width: min(100%, 420px);
+			min-height: 48px;
+			margin-bottom: 8px;
+			padding: 8px;
+			font: 16px monospace;
+		}
+	</style>
+</head>
+<body>
+	<textarea id="expression" aria-label="Conta" placeholder="Digite uma conta, por exemplo: 2 + 3"></textarea>
+	<textarea id="result" aria-label="Resultado" placeholder="Resultado" readonly></textarea>
+	<script src="app.js"></script>
+</body>
+</html>
