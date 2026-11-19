@@ -1,5 +1,3 @@
-//aaaa
-
 const expression = document.querySelector('#expression');
 const result = document.querySelector('#result');
 
